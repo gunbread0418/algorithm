@@ -27,12 +27,19 @@ public class Main {
             st = new StringTokenizer(br.readLine());
             int a = Integer.parseInt(st.nextToken());
             int b = Integer.parseInt(st.nextToken());
-            int resultMax = findMax(0,N-1,1,a-1,b-1);
-            int resultMin = findMin(0,N-1,1,a-1,b-1);
+
+            resultMin = Integer.MAX_VALUE;
+            resultMax = Integer.MIN_VALUE;
+
+            find(0,N-1,1,a-1,b-1);
+
             sb.append(resultMin).append(" ").append(resultMax).append("\n");
         }
         System.out.println(sb);
     }
+
+    static int resultMax;
+    static int resultMin;
 
     static int initMax(int start, int end, int node) {
 
@@ -52,23 +59,19 @@ public class Main {
         return treeMin[node] = Math.min(initMin(start,mid,node*2),initMin(mid+1,end,node*2+1));
     }
 
-    static int findMax(int start, int end, int node, int left, int right) { // 최소 최대 찾는 메소드
-        if(left>end||right<start) return Integer.MIN_VALUE;
+    static void find(int start,int end,int node,int left, int right){
+        if(left>end||right<start) return;
 
-        if(left <= start && end <= right) return treeMax[node];
-
-        int mid = (start+end)/2;
-
-        return Math.max(findMax(start,mid,node*2,left,right),findMax(mid+1,end,node*2+1,left,right));
-    }
-
-    static int findMin(int start,int end, int node, int left, int right){
-        if(left>end||right<start) return Integer.MAX_VALUE;
-
-        if(left <= start && end <= right) return treeMin[node];
+        if(left <= start && end <= right){
+            resultMin = Math.min(resultMin,treeMin[node]);
+            resultMax = Math.max(resultMax,treeMax[node]);
+            return;
+        }
 
         int mid = (start+end)/2;
 
-        return Math.min(findMin(start,mid,node*2,left,right),findMin(mid+1,end,node*2+1,left,right));
+        find(start, mid, node * 2, left, right);
+        find(mid + 1, end, node * 2 + 1, left, right);
     }
+
 }
